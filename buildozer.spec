@@ -9,6 +9,8 @@ version = 1.0
 
 # Bibliotecas essenciais e estáveis para a aplicação não crashar ao usar a rede
 requirements = python3,kivy,requests,openssl,urllib3,certifi,charset-normalizer,idna
+# Força o Buildozer a descarregar a versão correta do instalador sem falhar caminhos
+p4a.branch = master
 
 orientation = portrait
 fullscreen = 1
