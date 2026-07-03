@@ -31,8 +31,8 @@ jobs:
           pkg-config autoconf automake libpython3-dev libsqlite3-dev \
           lld unzip zip aidl libstdc++6
         pip install --upgrade pip
-        # ATUALIZADO: Buildozer 1.6.0 para suportar APIs modernas do Android 14/15
-        pip install "buildozer==1.6.0" "cython<3.0.0" virtualenv
+        # Versões trancadas para máxima estabilidade na API 34
+        pip install "buildozer==1.5.0" "cython<3.0.0" virtualenv
 
     - name: Compilar APK com Buildozer
       run: |
