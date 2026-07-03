@@ -7,30 +7,18 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Código
       uses: actions/checkout@v4
 
-    - name: Configurar Python
-      uses: actions/setup-python@v5
+    - name: Compilar APK via Docker Isolado
+      # Usa a imagem oficial e blindada do Buildozer onde o Python e o Android SDK nunca entram em conflito
+      uses: ArtemGovorov/buildozer-action@v1
       with:
-        python-version: '3.11'
-
-    - name: Instalar Dependencias do Linux e AIDL
-      run: |
-        sudo apt-get update
-        # Adicionadas todas as bibliotecas de desenvolvimento em falta
-        sudo apt-get install -y libsqlite3-dev lld libffi-dev python3-setuptools libssl-dev build-essential libstdc++6 aidl libtool pkg-config autoconf automake
-        pip install --upgrade pip
-        pip install buildozer cython virtualenv
-
-    - name: Compilar APK Limpo
-      run: |
-        buildozer android clean
-        mkdir -p ~/.buildozer/android/platform/
-        yes | buildozer android debug
+        buildozer_version: stable
+        command: android debug
 
     - name: Enviar Ficheiro APK Final
       uses: actions/upload-artifact@v4
