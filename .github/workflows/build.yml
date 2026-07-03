@@ -14,8 +14,8 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Compilar APK via Docker Isolado
-      # Usa a imagem oficial e blindada do Buildozer onde o Python e o Android SDK nunca entram em conflito
-      uses: ArtemGovorov/buildozer-action@v1
+      # Corrigido para o repositório oficial atualizado do autor
+      uses: ArtemSBulgakov/buildozer-action@v1
       with:
         buildozer_version: stable
         command: android debug
