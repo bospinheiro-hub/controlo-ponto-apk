@@ -31,12 +31,19 @@ jobs:
           pkg-config autoconf automake libpython3-dev libsqlite3-dev \
           lld unzip zip aidl libstdc++6
         pip install --upgrade pip
-        # Instalamos o Buildozer e o Cython nas versões de estabilidade total
         pip install "buildozer==1.5.0" "cython<3.0.0" virtualenv
 
     - name: Compilar APK com Buildozer
       run: |
-        # Criamos as pastas manualmente para evitar o erro de FileNotFoundError
         mkdir -p ~/.buildozer/android/platform/
-        # Inicia a compilação diretamente injetando a resposta sim
         yes | buildozer android debug
+
+    - name: Enviar Ficheiro APK Final
+      uses: actions/upload-artifact@v4
+      with:
+        name: Ponto-APK
+        path: |
+          bin/*.apk
+          .buildozer/**/*.apk
+        # FORÇA O GITHUB A DAR ERRO SE O APK NÃO EXISTIR REAlMENTE
+        if-no-files-found: error
