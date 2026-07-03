@@ -14,11 +14,11 @@ fullscreen = 1
 
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# Calibragem estrita para o Gradle do GitHub Actions não falhar o empacotamento
-android.api = 33
-android.minapi = 21
-android.ndk_api = 21
-android.ndk = 25b
+# ALVOS MÁXIMOS ATUALIZADOS PARA ANDROID 14 E 15
+android.api = 35
+android.minapi = 26
+android.ndk_api = 26
+android.ndk = 26b
 android.archs = arm64-v8a
 android.allow_backup = True
 android.accept_sdk_license = True
