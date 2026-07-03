@@ -33,12 +33,6 @@ jobs:
         pip install --upgrade pip
         pip install "buildozer==1.5.0" "cython<3.0.0" virtualenv
 
-    - name: Clonar Motor Python-for-Android Manualmente
-      run: |
-        mkdir -p .buildozer/android/platform
-        cd .buildozer/android/platform
-        git clone https://github.com python-for-android
-
     - name: Compilar APK com Buildozer
       run: |
         yes | buildozer android debug
