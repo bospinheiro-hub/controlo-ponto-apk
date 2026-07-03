@@ -31,12 +31,12 @@ jobs:
           pkg-config autoconf automake libpython3-dev libsqlite3-dev \
           lld unzip zip aidl libstdc++6
         pip install --upgrade pip
-        pip install "buildozer==1.5.0" "cython<3.0.0" virtualenv
+        # ATUALIZADO: Buildozer 1.6.0 para suportar APIs modernas do Android 14/15
+        pip install "buildozer==1.6.0" "cython<3.0.0" virtualenv
 
     - name: Compilar APK com Buildozer
       run: |
         mkdir -p ~/.buildozer/android/platform/
-        # FORÇA A LIMPEZA TOTAL DA CACHE ANTIGA QUE ESTAVA A BLOQUEAR
         buildozer android clean
         yes | buildozer android debug
 
