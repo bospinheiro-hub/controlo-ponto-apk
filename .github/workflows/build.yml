@@ -7,18 +7,37 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout Código
       uses: actions/checkout@v4
 
-    - name: Compilar APK via Docker Isolado
-      # Corrigido para o repositório oficial atualizado do autor
-      uses: ArtemSBulgakov/buildozer-action@v1
+    - name: Configurar Java (Necessario para o Gradle Android)
+      uses: actions/setup-java@v4
       with:
-        buildozer_version: stable
-        command: android debug
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Instalar Ferramentas de Compilacao do Linux
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential ccache git libffi-dev libssl-dev libtool \
+          pkg-config autoconf automake phoneme-advanced libpython3-dev libsqlite3-dev \
+          lld unzip zip aidl libstdc++6
+        pip install --upgrade pip
+        pip install "buildozer>=1.5.0" "cython<3.0.0" virtualenv
+
+    - name: Compilar APK com Buildozer
+      run: |
+        # Executa uma limpeza preventiva e compila
+        buildozer android clean
+        yes | buildozer android debug
 
     - name: Enviar Ficheiro APK Final
       uses: actions/upload-artifact@v4
