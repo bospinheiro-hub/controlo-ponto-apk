@@ -7,12 +7,11 @@ from kivy.uix.button import Button
 from kivy.network.urlrequest import UrlRequest
 from kivy.utils import platform
 
-# IP fixo e porta do seu servidor Windows
+# Mude para o IP fixo real do seu computador servidor Windows
 SERVIDOR_URL = "http://192.168.1" 
 
 class PontoApp(App):
     def build(self):
-        # Determinar caminho de armazenamento seguro e isolado
         if platform == 'android':
             from android.storage import app_storage_details
             self.data_dir = app_storage_details().filesDir
@@ -29,7 +28,6 @@ class PontoApp(App):
         self.atualizar_botao_ui()
         layout.add_widget(self.btn_ponto)
         
-        # Sincronização automática inicial
         self.sincronizar_dados_offline()
         return layout
 
