@@ -35,14 +35,12 @@ jobs:
 
     - name: Clonar Motor Python-for-Android Manualmente
       run: |
-        # Este passo resolve o FileNotFoundError criando e clonando o repositório oficial no caminho exato exigido
-        mkdir -p .buildozer/android/platform/
-        cd .buildozer/android/platform/
+        mkdir -p .buildozer/android/platform
+        cd .buildozer/android/platform
         git clone https://github.com python-for-android
 
     - name: Compilar APK com Buildozer
       run: |
-        # Executa diretamente sem o comando clean para não apagar o clone que acabámos de fazer
         yes | buildozer android debug
 
     - name: Enviar Ficheiro APK Final
