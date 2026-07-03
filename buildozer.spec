@@ -7,13 +7,13 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 1.0
 
-# Adicionado openssl para permitir comunicações de rede estáveis no Android
+# Requisitos estáveis para garantir comunicação de rede
 requirements = python3,kivy,requests,openssl,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
 fullscreen = 1
 
-# Permissões nativas para validar Wi-Fi e aceder à Internet
+# Permissões necessárias para detetar rede e enviar dados
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
 android.api = 33
