@@ -36,6 +36,8 @@ jobs:
     - name: Compilar APK com Buildozer
       run: |
         mkdir -p ~/.buildozer/android/platform/
+        # FORÇA A LIMPEZA TOTAL DA CACHE ANTIGA QUE ESTAVA A BLOQUEAR
+        buildozer android clean
         yes | buildozer android debug
 
     - name: Enviar Ficheiro APK Final
