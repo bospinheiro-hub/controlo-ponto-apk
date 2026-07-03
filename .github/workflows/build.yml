@@ -21,17 +21,13 @@ jobs:
     - name: Instalar Dependencias Linux e AIDL
       run: |
         sudo apt-get update
-        # Instala as ferramentas de compilação essenciais e o pacote nativo aidl
         sudo apt-get install -y libsqlite3-dev lld libffi-dev python3-setuptools libssl-dev build-essential libstdc++6 aidl
         pip install --upgrade pip
-        pip install buildozer cython virtualenv
+        # Instala versões de ferramentas que batem certo com o Buildozer estável
+        pip install "buildozer==1.5.0" "cython==0.29.36" virtualenv
 
-    - name: Compilar com Buildozer e Forçar Aceitação de Licenças
+    - name: Compilar com Buildozer
       run: |
-        # Cria a pasta de destino do SDK antecipadamente para injetar as licenças aceites
         mkdir -p ~/.buildozer/android/platform/
-        
-        # Executa o Buildozer injetando a resposta "yes" automaticamente para os prompts do SDKmanager da Google
+        # Executa o Buildozer com log simplificado (info) para não estourar o ecrã do GitHub
         yes | buildozer android debug
-      env:
-        ACCEPT_SDK_LICENSE: "y"
