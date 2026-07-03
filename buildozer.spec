@@ -4,20 +4,18 @@ package.name = controloponto
 package.domain = org.empresa
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
-source.exclude_patterns = tests/*, venv/*, *.pyc, build/*
-
+source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 1.0
 
-# REMOVIDAS AS VERSÕES FIXAS: O Buildozer vai usar o Python nativo automaticamente
-requirements = python3,kivy,requests,urllib3,certifi,charset-normalizer,idna
+# Adicionado openssl para permitir comunicações de rede estáveis no Android
+requirements = python3,kivy,requests,openssl,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
 fullscreen = 1
 
-# Permissões do Android
-android.permissions = INTERNET, ACCESS_NETWORK_STATE
+# Permissões nativas para validar Wi-Fi e aceder à Internet
+android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# Configurações do SDK estáveis
 android.api = 33
 android.minapi = 21
 android.ndk_api = 21
