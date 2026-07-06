@@ -50,7 +50,7 @@ class PontoApp(App):
         barra_topo.add_widget(btn_limpar)
         self.layout_principal.add_widget(barra_topo)
 
-        # LOGÓTIPO TRANSPARENTE PROTEGIDO
+        # LOGÓTIPO TRANSPARENTE
         logo_carregado = False
         if os.path.exists(self.logo_path):
             try:
@@ -76,8 +76,9 @@ class PontoApp(App):
         self.botoes_ui = {}
         self.labels_ui = {}
         self.criar_interface_botoes()
-        self.atualizar_bloqueios_sequenciais()
-
+        
+        # Correção: A inicialização visual da sequência corre de forma segura no ciclo Kivy
+        Clock.schedule_once(lambda dt: self.atualizar_bloqueios_sequenciais(), 0.5)
         Clock.schedule_once(lambda dt: self.sincronizar_dados_offline(), 2)
         return self.layout_principal
     def _update_rect(self, instance, value):
@@ -117,17 +118,25 @@ class PontoApp(App):
 
         e1, s1, e2, s2 = [self.historico_botoes.get(p["id"]) for p in self.passos]
 
+        # Correção estrita do nome da função (sem o "c") para evitar NameError/Crash
         if not e1:
-            self.activar_ui_botao("Entrada_1", "Disponível para registo")
+            self.ativar_ui_botao("Entrada_1", "Disponível para registo")
         elif e1 and not s1 and not e2 and not s2:
-            self.activar_ui_botao("Saida_1", "Disponível para Almoço")
-            self.activar_ui_botao("Saida_2", "Disponível para Fim de dia direto")
+            self.ativar_ui_botao("Saida_1", "Disponível para Almoço")
+            self.ativar_ui_botao("Saida_2", "Disponível para Fim de dia direto")
         elif s1 and not e2:
-            self.activar_ui_botao("Entrada_2", "Disponível para Regresso")
+            self.ativar_ui_botao("Entrada_2", "Disponível para Regresso")
         elif e2 and not s2:
-            self.activar_ui_botao("Saida_2", "Disponível para Fim do Dia")
+            self.ativar_ui_botao("Saida_2", "Disponível para Fim do Dia")
 
-    def activar_ui_botao(self, p_id, texto_status):
+    def verificar_limpeza_imediata(self):
+        e1, s1, e2, s2 = [self.historico_botoes.get(p["id"]) for p in self.passos]
+        if e1 and s1 and e2 and s2:
+            self.historico_botoes = {}
+            self.salvar_estado_botoes()
+            self.atualizar_bloqueios_sequenciais()
+
+    def ativar_ui_botao(self, p_id, texto_status):
         self.botoes_ui[p_id].disabled = False
         self.botoes_ui[p_id].background_color = (0.65, 0.89, 0.63, 1) # Verde Pastel
         self.labels_ui[p_id].text = texto_status
@@ -215,8 +224,12 @@ class PontoApp(App):
 
     def salvar_configuracoes(self, novo_ip, nova_porta, novo_nome, novo_pin):
         with open(self.config_path, "w") as f:
-            json.dump({"ip": novo_ip, "porta": nova_porta, "nome": novo_nome, "pin_mestre": novo}, f, indent=4)
-        self.servidor_ip, self.servidor_porta, self.colaborador_nome, self.pin_mestre = novo_ip, nova_porta, novo_nome, novo
+            # Correção vital: Mapeamento de 'novo_pin' em vez do termo quebrado 'novo'
+            json.dump({"ip": novo_ip, "porta": nova_porta, "nome": novo_nome, "pin_mestre": novo_pin}, f, indent=4)
+        self.servidor_ip = novo_ip
+        self.servidor_porta = nova_porta
+        self.colaborador_nome = novo_nome
+        self.pin_mestre = novo_pin
         self.lbl_user.text = f"Colaborador: {self.colaborador_nome}"
 
     def carregar_estado_botoes(self):
