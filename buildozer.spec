@@ -7,8 +7,8 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 3.0
 
-# O Kivy irá gerir automaticamente a receita interna dentro do container Docker
-requirements = python3,kivy,requests,urllib3,certifi,charset-normalizer,idna
+# Alinhamento exato com o ambiente virtual isolado (Python 3.11)
+requirements = python3==3.11,kivy,requests,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
 fullscreen = 1
