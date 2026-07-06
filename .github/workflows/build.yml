@@ -7,17 +7,16 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout Codigo
       uses: actions/checkout@v4
 
-    # Ação oficial Kivy atualizada para 2026 (isola caminhos e evita o Broken Pipe do NDK)
-    - name: Compilar APK com Buildozer Action Oficial
-      uses: ArtemSBulgakov/buildozer-action@v3
+    # AÇÃO 100% OFICIAL DA ORGANIZAÇÃO KIVY (Configura o ambiente inteiro sem erros de repositório)
+    - name: Compilar APK com Kivy Buildozer Action
+      uses: kivy/buildozer-action@master
       with:
-        buildozer_version: stable
         command: android debug
 
     - name: Enviar Ficheiro APK Final para Download
