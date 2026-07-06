@@ -33,7 +33,7 @@ class PontoApp(App):
         self.layout_principal = BoxLayout(orientation='vertical', padding=20, spacing=10)
         
         with self.layout_principal.canvas.before:
-            Color(0.118, 0.118, 0.180, 1) # Fundo Escuro #1e1e2e
+            Color(0.118, 0.118, 0.180, 1) # #1e1e2e
             self.bg_rect = RoundedRectangle(size=self.layout_principal.size, pos=self.layout_principal.pos)
         self.layout_principal.bind(size=self._update_rect, pos=self._update_rect)
 
@@ -50,22 +50,12 @@ class PontoApp(App):
         barra_topo.add_widget(btn_limpar)
         self.layout_principal.add_widget(barra_topo)
 
-        # LOGÓTIPO TRANSPARENTE
-        logo_carregado = False
-        if os.path.exists(self.logo_path):
-            try:
-                area_logo = Image(source=self.logo_path, size_hint_y=None, height='100dp', allow_stretch=True)
-                self.layout_principal.add_widget(area_logo)
-                logo_carregado = True
-            except: pass
-            
-        if not logo_carregado:
-            lbl_titulo = Label(text="PAINEL DE PONTO DIGITAL", font_size='18sp', bold=True, color=(0.80, 0.84, 0.95, 1), size_hint_y=None, height='40dp')
-            self.layout_principal.add_widget(lbl_titulo)
+        # Contentor do cabeçalho que evita o crash de imagem
+        self.container_topo = BoxLayout(orientation='vertical', size_hint_y=None, height='100dp')
+        self.layout_principal.add_widget(self.container_topo)
 
         self.lbl_user = Label(text=f"Colaborador: {self.colaborador_nome}", font_size='16sp', bold=True, color=(0.80, 0.84, 0.95, 1), size_hint_y=None, height='30dp')
         self.layout_principal.add_widget(self.lbl_user)
-
         self.passos = [
             {"id": "Entrada_1", "texto_p": "1. ENTRADA MANHÃ", "texto_s": "Início de dia", "tipo": "Entrada"},
             {"id": "Saida_1", "texto_p": "2. SAÍDA ALMOÇO", "texto_s": "Pausa para refeição", "tipo": "Saída"},
@@ -77,28 +67,37 @@ class PontoApp(App):
         self.labels_ui = {}
         self.criar_interface_botoes()
         
-        # Correção: A inicialização visual da sequência corre de forma segura no ciclo Kivy
+        # Dispara os elementos de rede e imagem em diferido para garantir abertura estável
+        Clock.schedule_once(lambda dt: self.carregar_imagem_segura(), 0.1)
         Clock.schedule_once(lambda dt: self.atualizar_bloqueios_sequenciais(), 0.5)
         Clock.schedule_once(lambda dt: self.sincronizar_dados_offline(), 2)
         return self.layout_principal
+
     def _update_rect(self, instance, value):
         self.bg_rect.pos = instance.pos
         self.bg_rect.size = instance.size
+
+    def carregar_imagem_segura(self):
+        try:
+            if os.path.exists(self.logo_path) and os.path.getsize(self.logo_path) > 0:
+                area_logo = Image(source=self.logo_path, allow_stretch=True)
+                self.container_topo.add_widget(area_logo)
+                return
+        except: pass
+        lbl_titulo = Label(text="PAINEL DE PONTO DIGITAL", font_size='18sp', bold=True, color=(0.80, 0.84, 0.95, 1))
+        self.container_topo.add_widget(lbl_titulo)
 
     def criar_interface_botoes(self):
         for passo in self.passos:
             p_id = passo["id"]
             box_passo = BoxLayout(orientation='vertical', spacing=2, size_hint_y=None, height='90dp')
-            
             btn = Button(text=passo["texto_p"], font_size='16sp', bold=True, background_normal='', color=(0.11, 0.11, 0.18, 1))
             btn.bind(on_press=lambda inst, pid=p_id: self.clique_passo(pid))
             box_passo.add_widget(btn)
             self.botoes_ui[p_id] = btn
-            
             lbl = Label(text=passo["texto_s"], font_size='12sp', color=(0.42, 0.44, 0.55, 1))
             box_passo.add_widget(lbl)
             self.labels_ui[p_id] = lbl
-            
             self.layout_principal.add_widget(box_passo)
 
     def atualizar_bloqueios_sequenciais(self):
@@ -107,38 +106,32 @@ class PontoApp(App):
             hora_gravada = self.historico_botoes.get(p_id)
             if hora_gravada:
                 self.botoes_ui[p_id].disabled = True
-                self.botoes_ui[p_id].background_color = (0.95, 0.54, 0.65, 1) # Vermelho Pastel
+                self.botoes_ui[p_id].background_color = (0.95, 0.54, 0.65, 1)
                 self.labels_ui[p_id].text = f"Registado às: {hora_gravada}"
                 self.labels_ui[p_id].color = (0.95, 0.54, 0.65, 1)
             else:
                 self.botoes_ui[p_id].disabled = True
-                self.botoes_ui[p_id].background_color = (0.27, 0.28, 0.35, 1) # Cinza Bloqueado
+                self.botoes_ui[p_id].background_color = (0.27, 0.28, 0.35, 1)
                 self.labels_ui[p_id].text = "Bloqueado"
                 self.labels_ui[p_id].color = (0.42, 0.44, 0.55, 1)
 
         e1, s1, e2, s2 = [self.historico_botoes.get(p["id"]) for p in self.passos]
-
-        # Correção estrita do nome da função (sem o "c") para evitar NameError/Crash
-        if not e1:
-            self.ativar_ui_botao("Entrada_1", "Disponível para registo")
+        if not e1: self.ativar_ui_botao("Entrada_1", "Disponível para registo")
         elif e1 and not s1 and not e2 and not s2:
             self.ativar_ui_botao("Saida_1", "Disponível para Almoço")
             self.ativar_ui_botao("Saida_2", "Disponível para Fim de dia direto")
-        elif s1 and not e2:
-            self.ativar_ui_botao("Entrada_2", "Disponível para Regresso")
-        elif e2 and not s2:
-            self.ativar_ui_botao("Saida_2", "Disponível para Fim do Dia")
+        elif s1 and not e2: self.ativar_ui_botao("Entrada_2", "Disponível para Regresso")
+        elif e2 and not s2: self.ativar_ui_botao("Saida_2", "Disponível para Fim do Dia")
 
-    def verificar_limpeza_imediata(self):
-        e1, s1, e2, s2 = [self.historico_botoes.get(p["id"]) for p in self.passos]
-        if e1 and s1 and e2 and s2:
-            self.historico_botoes = {}
-            self.salvar_estado_botoes()
-            self.atualizar_bloqueios_sequenciais()
+    def activar_ui_botao(self, p_id, texto_status):
+        self.ativar_ui_botao(p_id, texto_status)
+
+    def activar_ui_botao(self, p_id, texto_status):
+        self.ativar_ui_botao(p_id, texto_status)
 
     def ativar_ui_botao(self, p_id, texto_status):
         self.botoes_ui[p_id].disabled = False
-        self.botoes_ui[p_id].background_color = (0.65, 0.89, 0.63, 1) # Verde Pastel
+        self.botoes_ui[p_id].background_color = (0.65, 0.89, 0.63, 1)
         self.labels_ui[p_id].text = texto_status
         self.labels_ui[p_id].color = (0.65, 0.89, 0.63, 1)
 
@@ -147,19 +140,15 @@ class PontoApp(App):
         hora_formatada = agora.strftime("%H:%M:%S")
         timestamp_completo = agora.strftime("%Y-%m-%d %H:%M:%S")
         tipo_registo = next(p["tipo"] for p in self.passos if p["id"] == passo_id)
-
         self.historico_botoes[passo_id] = hora_formatada
         self.salvar_estado_botoes()
-
         registo = {"timestamp": timestamp_completo, "tipo": tipo_registo, "nome": self.colaborador_nome}
         self.guardar_localmente(registo)
         self.guardar_no_historico_seguro(registo)
-
         if passo_id == "Saida_2":
             self.exibir_popup_mensagem("Ponto Encerrado", "Dia terminado. O ponto é reiniciado, obrigado e bom descanso!")
             self.historico_botoes = {}
             self.salvar_estado_botoes()
-
         self.atualizar_bloqueios_sequenciais()
         self.sincronizar_dados_offline()
     def guardar_localmente(self, registo):
@@ -189,14 +178,11 @@ class PontoApp(App):
                 dados = json.load(f)
                 historico = dados.get("historico", [])
             except: historico = []
-            
         if not historico:
             self.exibir_popup_mensagem("Limpar Memória", "O seu livro de ponto já está completamente vazio.")
             return
-
-        p_data = historico[0]["timestamp"]
+        p_data = historico["timestamp"]
         u_data = historico[-1]["timestamp"]
-
         box = BoxLayout(orientation='vertical', padding=10, spacing=10)
         box.add_widget(Label(text=f"Isto vai apagar o seu livro de ponto de\n{p_data}\na\n{u_data}.\n\nInserir PIN de administrador:", halign='center'))
         pin_in = TextInput(password=True, multiline=False, halign='center', size_hint_y=None, height='40dp')
@@ -204,7 +190,6 @@ class PontoApp(App):
         btn = Button(text="Confirmar Limpeza", size_hint_y=None, height='45dp', background_color=(0.95, 0.54, 0.65, 1))
         box.add_widget(btn)
         popup = Popup(title="AVISO CRÍTICO", content=box, size_hint=(0.9, 0.6))
-        
         def confirmar(inst):
             if pin_in.text.strip() == self.pin_mestre:
                 if os.path.exists(self.backup_path): os.remove(self.backup_path)
@@ -224,12 +209,8 @@ class PontoApp(App):
 
     def salvar_configuracoes(self, novo_ip, nova_porta, novo_nome, novo_pin):
         with open(self.config_path, "w") as f:
-            # Correção vital: Mapeamento de 'novo_pin' em vez do termo quebrado 'novo'
             json.dump({"ip": novo_ip, "porta": nova_porta, "nome": novo_nome, "pin_mestre": novo_pin}, f, indent=4)
-        self.servidor_ip = novo_ip
-        self.servidor_porta = nova_porta
-        self.colaborador_nome = novo_nome
-        self.pin_mestre = novo_pin
+        self.servidor_ip, self.servidor_porta, self.colaborador_nome, self.pin_mestre = novo_ip, nova_porta, novo_nome, novo_pin
         self.lbl_user.text = f"Colaborador: {self.colaborador_nome}"
 
     def carregar_estado_botoes(self):
@@ -262,7 +243,6 @@ class PontoApp(App):
         btn = Button(text="Validar", size_hint_y=None, height='40dp')
         box.add_widget(btn)
         popup = Popup(title="Acesso Restrito", content=box, size_hint=(0.8, 0.4))
-        
         def verificar(inst):
             if pin_in.text.strip() == self.pin_mestre:
                 popup.dismiss()
@@ -274,17 +254,14 @@ class PontoApp(App):
         box = BoxLayout(orientation='vertical', padding=10, spacing=5)
         inputs = {}
         campos = [("nome", "Nome de Colaborador:", self.colaborador_nome), ("pin", "Novo PIN de administrador:", self.pin_mestre), ("ip", "IP Servidor:", self.servidor_ip), ("porta", "Porta:", self.servidor_porta)]
-        
         for key, label, val in campos:
             box.add_widget(Label(text=label, size_hint_y=None, height='20dp'))
             inp = TextInput(text=val, multiline=False, halign='center', size_hint_y=None, height='35dp')
             box.add_widget(inp)
             inputs[key] = inp
-            
         btn_g = Button(text="GRAVAR", size_hint_y=None, height='40dp', bold=True)
         box.add_widget(btn_g)
         popup = Popup(title="Painel Patrão", content=box, size_hint=(0.9, 0.8))
-        
         def salvar(inst):
             self.salvar_configuracoes(inputs["ip"].text.strip(), inputs["porta"].text.strip(), inputs["nome"].text.strip(), inputs["pin"].text.strip())
             popup.dismiss()
