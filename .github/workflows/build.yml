@@ -31,7 +31,6 @@ jobs:
           pkg-config autoconf automake libpython3-dev libsqlite3-dev \
           lld unzip zip aidl libstdc++6 libtinfo5 libncurses5 libncursesw5
         pip install --upgrade pip
-        # Trancagem estável absoluta de ferramentas
         pip install "buildozer==1.5.0" "cython==0.29.36" virtualenv
 
     - name: Compilar APK com Buildozer
@@ -39,5 +38,6 @@ jobs:
         export PATH=$PATH:~/.local/bin
         unset ANDROID_NDK_HOME
         unset ANDROID_NDK_ROOT
-        # Força o Buildozer a usar o executável do Python 3.11 configurado no workflow
-        buildozer android debug
+        # ALINHAMENTO DE HOST: Força o Linux a expor o Python 3.11 como o padrão do sistema
+        ln -sf /opt/hostedtoolcache/Python/3.11.*/x64/bin/python3 /usr/local/bin/python3
+        yes | buildozer android debug
