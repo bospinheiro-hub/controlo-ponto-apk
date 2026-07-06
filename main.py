@@ -33,7 +33,7 @@ class PontoApp(App):
         self.layout_principal = BoxLayout(orientation='vertical', padding=20, spacing=10)
         
         with self.layout_principal.canvas.before:
-            Color(0.118, 0.118, 0.180, 1) # Fundo Escuro #1e1e2e
+            Color(0.118, 0.118, 0.180, 1) # #1e1e2e
             self.bg_rect = RoundedRectangle(size=self.layout_principal.size, pos=self.layout_principal.pos)
         self.layout_principal.bind(size=self._update_rect, pos=self._update_rect)
 
@@ -50,11 +50,16 @@ class PontoApp(App):
         barra_topo.add_widget(btn_limpar)
         self.layout_principal.add_widget(barra_topo)
 
-        # LOGÓTIPO TRANSPARENTE
+        # LOGÓTIPO BLINDADO CONTRA CRASH
+        logo_carregado = False
         if os.path.exists(self.logo_path):
-            area_logo = Image(source=self.logo_path, size_hint_y=None, height='100dp', allow_stretch=True)
-            self.layout_principal.add_widget(area_logo)
-        else:
+            try:
+                area_logo = Image(source=self.logo_path, size_hint_y=None, height='100dp', allow_stretch=True)
+                self.layout_principal.add_widget(area_logo)
+                logo_carregado = True
+            except: pass
+            
+        if not logo_carregado:
             lbl_titulo = Label(text="PAINEL DE PONTO DIGITAL", font_size='18sp', bold=True, color=(0.80, 0.84, 0.95, 1), size_hint_y=None, height='40dp')
             self.layout_principal.add_widget(lbl_titulo)
 
@@ -101,12 +106,12 @@ class PontoApp(App):
             hora_gravada = self.historico_botoes.get(p_id)
             if hora_gravada:
                 self.botoes_ui[p_id].disabled = True
-                self.botoes_ui[p_id].background_color = (0.95, 0.54, 0.65, 1) # Vermelho Pastel
+                self.botoes_ui[p_id].background_color = (0.95, 0.54, 0.65, 1)
                 self.labels_ui[p_id].text = f"Registado às: {hora_gravada}"
                 self.labels_ui[p_id].color = (0.95, 0.54, 0.65, 1)
             else:
                 self.botoes_ui[p_id].disabled = True
-                self.botoes_ui[p_id].background_color = (0.27, 0.28, 0.35, 1) # Cinza Bloqueado
+                self.botoes_ui[p_id].background_color = (0.27, 0.28, 0.35, 1)
                 self.labels_ui[p_id].text = "Bloqueado"
                 self.labels_ui[p_id].color = (0.42, 0.44, 0.55, 1)
 
@@ -124,7 +129,7 @@ class PontoApp(App):
 
     def activar_ui_botao(self, p_id, texto_status):
         self.botoes_ui[p_id].disabled = False
-        self.botoes_ui[p_id].background_color = (0.65, 0.89, 0.63, 1) # Verde Pastel
+        self.botoes_ui[p_id].background_color = (0.65, 0.89, 0.63, 1)
         self.labels_ui[p_id].text = texto_status
         self.labels_ui[p_id].color = (0.65, 0.89, 0.63, 1)
 
@@ -148,6 +153,7 @@ class PontoApp(App):
 
         self.atualizar_bloqueios_sequenciais()
         self.sincronizar_dados_offline()
+
     def guardar_localmente(self, registo):
         dados = {"registos": []}
         if os.path.exists(self.db_path):
@@ -274,9 +280,9 @@ class PontoApp(App):
         btn_g.bind(on_press=salvar)
         popup.open()
 
-    def exibir_popup_mensagem(self, titulo, mensagem):
+    def exibir_popup_mensagem(self, titulo, message):
         box = BoxLayout(orientation='vertical', padding=10)
-        box.add_widget(Label(text=mensagem, halign='center', valign='middle'))
+        box.add_widget(Label(text=message, halign='center', valign='middle'))
         popup = Popup(title=titulo, content=box, size_hint=(0.85, 0.4))
         popup.open()
 
