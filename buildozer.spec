@@ -14,9 +14,11 @@ fullscreen = 1
 
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# CONFIGURAÇÃO DE SEGURANÇA E ARQUITETURA MODERNA TRANCADA
+# CONFIGURAÇÃO DE SEGURANÇA MÁXIMA COMPATÍVEL
 android.api = 34
 android.minapi = 26
+android.ndk_api = 26
+android.ndk = 26b
 android.private_storage = True
 android.archs = arm64-v8a
 android.allow_backup = True
