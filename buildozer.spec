@@ -7,8 +7,8 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 3.0
 
-# CORREÇÃO FOCADA: Deixamos o python3 livre para se alinhar com o host de compilação sem dar erro
-requirements = python3,kivy,requests,urllib3,certifi,charset-normalizer,idna
+# Trancado na versão LTS mais segura e compatível com Android do mercado
+requirements = python3==3.10,kivy,requests,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
 fullscreen = 1
