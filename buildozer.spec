@@ -7,7 +7,7 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 3.0
 
-# TRANCADO: Força o uso estrito da receita estável do python3 no compilador
+# Alinhamento exato com o host de compilação do fluxo
 requirements = python3==3.11,kivy,requests,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
