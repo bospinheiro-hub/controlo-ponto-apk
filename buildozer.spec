@@ -1,7 +1,7 @@
 [app]
-title = Controlo de Ponto
-package.name = pontosistema
-package.domain = org.empresa.nova
+title = Sistema de Ponto Pro
+package.name = pontosistemapro
+package.domain = org.empresanova.ponto
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
@@ -14,7 +14,7 @@ fullscreen = 1
 
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# CONFIGURAÇÃO DE SEGURANÇA MÁXIMA PARA ANDROID MODERNOS
+# CALIBRAGEM ESTREITA PARA PASSAR NOS TELEMÓVEIS ATUAIS
 android.api = 34
 android.minapi = 26
 android.ndk_api = 26
