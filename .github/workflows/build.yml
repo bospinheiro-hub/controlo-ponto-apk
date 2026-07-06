@@ -7,18 +7,39 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout Codigo
       uses: actions/checkout@v4
 
-    # Usa a ação oficial calibrada pela comunidade para gerir os caminhos do NDK pré-instalado
-    - name: Compilar APK com Buildozer Action Oficial
-      uses: ArtemSBulgakov/buildozer-action@v1
+    - name: Configurar Java 17
+      uses: actions/setup-java@v4
       with:
-        buildozer_version: stable
-        command: android debug
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Instalar Ferramentas de Compilacao
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential ccache git libffi-dev libssl-dev libtool \
+          pkg-config autoconf automake libpython3-dev libsqlite3-dev \
+          lld unzip zip aidl libstdc++6
+        pip install --upgrade pip
+        pip install "buildozer==1.5.0" "cython<3.0.0" virtualenv
+
+    - name: Compilar APK com Buildozer Nativo
+      run: |
+        # SEGREDO MATEMÁTICO: Limpa as variáveis de ambiente do GitHub para evitar conflito de NDK e Broken Pipe
+        unset ANDROID_NDK_HOME
+        unset ANDROID_NDK_ROOT
+        mkdir -p ~/.buildozer/android/platform/
+        yes | buildozer android debug
 
     - name: Enviar Ficheiro APK Final
       uses: actions/upload-artifact@v4
