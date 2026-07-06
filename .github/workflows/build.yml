@@ -7,7 +7,6 @@ on:
 
 jobs:
   build:
-    # Atualizado para o ambiente moderno de compilação da Google
     runs-on: ubuntu-24.04
 
     steps:
@@ -32,7 +31,6 @@ jobs:
           pkg-config autoconf automake libpython3-dev libsqlite3-dev \
           lld unzip zip aidl libstdc++6 openjdk-17-jdk
         pip install --upgrade pip
-        # Usar a versão estável mais recente para evitar falhas de compilação C++
         pip install "buildozer>=1.6.0" "cython<3.0.0" virtualenv
 
     - name: Destruir Ficheiros Temporarios Antigos
