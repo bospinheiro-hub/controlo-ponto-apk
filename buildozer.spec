@@ -14,7 +14,7 @@ fullscreen = 1
 
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# JFORÇA A COMPILAÇÃO PURA DE 64 BITS MODERNA (API 34 + NDK 26b + ARM64)
+# CONFIGURAÇÃO DE ESTABILIDADE GERAL PARA DISPOSITIVOS ATÉ ANDROID 15
 android.api = 34
 android.minapi = 26
 android.ndk_api = 26
