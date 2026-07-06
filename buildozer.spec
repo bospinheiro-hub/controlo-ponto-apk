@@ -7,7 +7,7 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 3.0
 
-# Deixamos o motor escolher as versões nativas ideais para o Android 14/15
+# Deixamos o ecossistema oficial do Kivy descarregar as dependências ideais
 requirements = python3,kivy,requests,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
