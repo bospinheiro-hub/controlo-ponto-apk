@@ -50,7 +50,7 @@ class PontoApp(App):
         barra_topo.add_widget(btn_limpar)
         self.layout_principal.add_widget(barra_topo)
 
-        # LOGÓTIPO TRANSPARENTE NATIVO DO ANDROID
+        # LOGÓTIPO TRANSPARENTE
         if os.path.exists(self.logo_path):
             area_logo = Image(source=self.logo_path, size_hint_y=None, height='100dp', allow_stretch=True)
             self.layout_principal.add_widget(area_logo)
@@ -249,7 +249,7 @@ class PontoApp(App):
             if pin_in.text.strip() == self.pin_mestre:
                 popup.dismiss()
                 self.abrir_painel_config()
-        btn.bind(on_press=verify := verificar)
+        btn.bind(on_press=verificar)
         popup.open()
 
     def abrir_painel_config(self):
