@@ -11,6 +11,7 @@ from kivy.network.urlrequest import UrlRequest
 from kivy.utils import platform
 from kivy.graphics import Color, RoundedRectangle
 from kivy.clock import Clock
+from kivy.uix.image import Image
 
 class PontoApp(App):
     def build(self):
@@ -24,6 +25,7 @@ class PontoApp(App):
         self.config_path = os.path.join(self.data_dir, "config_rede.json")
         self.backup_path = os.path.join(self.data_dir, "historico_seguro.json")
         self.estado_path = os.path.join(self.data_dir, "fluxo_botoes.json")
+        self.logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logo.png")
         
         self.servidor_ip, self.servidor_porta, self.colaborador_nome, self.pin_mestre = self.carregar_configuracoes()
         self.historico_botoes = self.carregar_estado_botoes()
@@ -35,7 +37,7 @@ class PontoApp(App):
             self.bg_rect = RoundedRectangle(size=self.layout_principal.size, pos=self.layout_principal.pos)
         self.layout_principal.bind(size=self._update_rect, pos=self._update_rect)
 
-        # BARRA DE TOPO (Definições e Limpeza de Memória)
+        # BARRA DE TOPO
         barra_topo = BoxLayout(orientation='horizontal', size_hint_y=None, height='50dp')
         btn_config = Button(text="⚙", font_size='26sp', size_hint_x=None, width='50dp', background_normal='', background_color=(0,0,0,0), color=(0.65, 0.68, 0.78, 1))
         btn_config.bind(on_press=self.validar_acesso_admin)
@@ -47,6 +49,14 @@ class PontoApp(App):
         barra_topo.add_widget(Label())
         barra_topo.add_widget(btn_limpar)
         self.layout_principal.add_widget(barra_topo)
+
+        # LOGÓTIPO TRANSPARENTE NATIVO DO ANDROID
+        if os.path.exists(self.logo_path):
+            area_logo = Image(source=self.logo_path, size_hint_y=None, height='100dp', allow_stretch=True)
+            self.layout_principal.add_widget(area_logo)
+        else:
+            lbl_titulo = Label(text="PAINEL DE PONTO DIGITAL", font_size='18sp', bold=True, color=(0.80, 0.84, 0.95, 1), size_hint_y=None, height='40dp')
+            self.layout_principal.add_widget(lbl_titulo)
 
         self.lbl_user = Label(text=f"Colaborador: {self.colaborador_nome}", font_size='16sp', bold=True, color=(0.80, 0.84, 0.95, 1), size_hint_y=None, height='30dp')
         self.layout_principal.add_widget(self.lbl_user)
@@ -91,30 +101,30 @@ class PontoApp(App):
             hora_gravada = self.historico_botoes.get(p_id)
             if hora_gravada:
                 self.botoes_ui[p_id].disabled = True
-                self.botoes_ui[p_id].background_color = (0.95, 0.54, 0.65, 1) # Vermelho
+                self.botoes_ui[p_id].background_color = (0.95, 0.54, 0.65, 1)
                 self.labels_ui[p_id].text = f"Registado às: {hora_gravada}"
                 self.labels_ui[p_id].color = (0.95, 0.54, 0.65, 1)
             else:
                 self.botoes_ui[p_id].disabled = True
-                self.botoes_ui[p_id].background_color = (0.27, 0.28, 0.35, 1) # Bloqueado
+                self.botoes_ui[p_id].background_color = (0.27, 0.28, 0.35, 1)
                 self.labels_ui[p_id].text = "Bloqueado"
                 self.labels_ui[p_id].color = (0.42, 0.44, 0.55, 1)
 
         e1, s1, e2, s2 = [self.historico_botoes.get(p["id"]) for p in self.passos]
 
         if not e1:
-            self.ativar_ui_botao("Entrada_1", "Disponível para registo")
+            self.activar_ui_botao("Entrada_1", "Disponível para registo")
         elif e1 and not s1 and not e2 and not s2:
-            self.ativar_ui_botao("Saida_1", "Disponível para Almoço")
-            self.ativar_ui_botao("Saida_2", "Disponível para Fim de dia direto")
+            self.activar_ui_botao("Saida_1", "Disponível para Almoço")
+            self.activar_ui_botao("Saida_2", "Disponível para Fim de dia direto")
         elif s1 and not e2:
-            self.ativar_ui_botao("Entrada_2", "Disponível para Regresso")
+            self.activar_ui_botao("Entrada_2", "Disponível para Regresso")
         elif e2 and not s2:
-            self.ativar_ui_botao("Saida_2", "Disponível para Fim do Dia")
+            self.activar_ui_botao("Saida_2", "Disponível para Fim do Dia")
 
-    def ativar_ui_botao(self, p_id, texto_status):
+    def activar_ui_botao(self, p_id, texto_status):
         self.botoes_ui[p_id].disabled = False
-        self.botoes_ui[p_id].background_color = (0.65, 0.89, 0.63, 1) # Verde
+        self.botoes_ui[p_id].background_color = (0.65, 0.89, 0.63, 1)
         self.labels_ui[p_id].text = texto_status
         self.labels_ui[p_id].color = (0.65, 0.89, 0.63, 1)
 
@@ -223,9 +233,6 @@ class PontoApp(App):
         url = f"http://{self.servidor_ip}:{self.servidor_porta}/ponto"
         UrlRequest(url, req_body=json.dumps(dados), req_headers={'Content-type': 'application/json'}, on_success=self.on_sinc_sucesso, timeout=4)
 
-    def os_sinc_sucesso(self, req, res):
-        pass
-
     def on_sinc_sucesso(self, req, res):
         with open(self.db_path, "w") as f: json.dump({"registos": []}, f)
 
@@ -242,7 +249,7 @@ class PontoApp(App):
             if pin_in.text.strip() == self.pin_mestre:
                 popup.dismiss()
                 self.abrir_painel_config()
-        btn.bind(on_press=verificar)
+        btn.bind(on_press=verify := verificar)
         popup.open()
 
     def abrir_painel_config(self):
