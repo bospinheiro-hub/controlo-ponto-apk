@@ -1,7 +1,7 @@
 [app]
 title = Controlo de Ponto
-package.name = controloponto
-package.domain = org.empresa
+package.name = pontosistema
+package.domain = org.empresa.nova
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
