@@ -35,7 +35,6 @@ jobs:
 
     - name: Destruir Ficheiros Temporarios Antigos
       run: |
-        # Força o GitHub a apagar qualquer manifesto ou configuração residual que causava o erro de versão antiga
         rm -rf .buildozer
         rm -rf build
         rm -rf bin
