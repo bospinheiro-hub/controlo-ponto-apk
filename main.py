@@ -67,7 +67,7 @@ class PontoApp(App):
         self.labels_ui = {}
         self.criar_interface_botoes()
         
-        # Dispara os elementos de rede e imagem em diferido para garantir abertura estável
+        # Dispara as funções em diferido para o Kivy assentar os gráficos na tela antes
         Clock.schedule_once(lambda dt: self.carregar_imagem_segura(), 0.1)
         Clock.schedule_once(lambda dt: self.atualizar_bloqueios_sequenciais(), 0.5)
         Clock.schedule_once(lambda dt: self.sincronizar_dados_offline(), 2)
@@ -116,18 +116,17 @@ class PontoApp(App):
                 self.labels_ui[p_id].color = (0.42, 0.44, 0.55, 1)
 
         e1, s1, e2, s2 = [self.historico_botoes.get(p["id"]) for p in self.passos]
-        if not e1: self.ativar_ui_botao("Entrada_1", "Disponível para registo")
+        
+        # Correção estrita efetuada: Chamadas unificadas para a função correta
+        if not e1: 
+            self.ativar_ui_botao("Entrada_1", "Disponível para registo")
         elif e1 and not s1 and not e2 and not s2:
             self.ativar_ui_botao("Saida_1", "Disponível para Almoço")
             self.ativar_ui_botao("Saida_2", "Disponível para Fim de dia direto")
-        elif s1 and not e2: self.ativar_ui_botao("Entrada_2", "Disponível para Regresso")
-        elif e2 and not s2: self.ativar_ui_botao("Saida_2", "Disponível para Fim do Dia")
-
-    def activar_ui_botao(self, p_id, texto_status):
-        self.ativar_ui_botao(p_id, texto_status)
-
-    def activar_ui_botao(self, p_id, texto_status):
-        self.ativar_ui_botao(p_id, texto_status)
+        elif s1 and not e2: 
+            self.ativar_ui_botao("Entrada_2", "Disponível para Regresso")
+        elif e2 and not s2: 
+            self.ativar_ui_botao("Saida_2", "Disponível para Fim do Dia")
 
     def ativar_ui_botao(self, p_id, texto_status):
         self.botoes_ui[p_id].disabled = False
@@ -210,7 +209,10 @@ class PontoApp(App):
     def salvar_configuracoes(self, novo_ip, nova_porta, novo_nome, novo_pin):
         with open(self.config_path, "w") as f:
             json.dump({"ip": novo_ip, "porta": nova_porta, "nome": novo_nome, "pin_mestre": novo_pin}, f, indent=4)
-        self.servidor_ip, self.servidor_porta, self.colaborador_nome, self.pin_mestre = novo_ip, nova_porta, novo_nome, novo_pin
+        self.servidor_ip = novo_ip
+        self.servidor_porta = nova_porta
+        self.colaborador_nome = novo_nome
+        self.pin_mestre = novo_pin
         self.lbl_user.text = f"Colaborador: {self.colaborador_nome}"
 
     def carregar_estado_botoes(self):
@@ -247,7 +249,7 @@ class PontoApp(App):
             if pin_in.text.strip() == self.pin_mestre:
                 popup.dismiss()
                 self.abrir_painel_config()
-        btn.bind(on_press=verificar)
+        btn.bind(on_press=verify := verificar)
         popup.open()
 
     def abrir_painel_config(self):
