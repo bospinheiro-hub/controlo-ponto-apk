@@ -33,8 +33,16 @@ jobs:
         pip install --upgrade pip
         pip install "buildozer==1.5.0" "cython<3.0.0" virtualenv
 
-    - name: Compilar APK com Buildozer
+    - name: Destruir Ficheiros Temporarios Antigos
       run: |
+        # Força o GitHub a apagar qualquer manifesto ou configuração residual que causava o erro de versão antiga
+        rm -rf .buildozer
+        rm -rf build
+        rm -rf bin
+
+    - name: Compilar APK Limpo com Buildozer
+      run: |
+        mkdir -p ~/.buildozer/android/platform/
         yes | buildozer android debug
 
     - name: Enviar Ficheiro APK Final
@@ -43,5 +51,4 @@ jobs:
         name: Ponto-APK
         path: |
           bin/*.apk
-          .buildozer/**/*.apk
         if-no-files-found: error
