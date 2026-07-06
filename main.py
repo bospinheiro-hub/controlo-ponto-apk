@@ -33,7 +33,7 @@ class PontoApp(App):
         self.layout_principal = BoxLayout(orientation='vertical', padding=20, spacing=10)
         
         with self.layout_principal.canvas.before:
-            Color(0.118, 0.118, 0.180, 1) # #1e1e2e
+            Color(0.118, 0.118, 0.180, 1) # Fundo Escuro #1e1e2e
             self.bg_rect = RoundedRectangle(size=self.layout_principal.size, pos=self.layout_principal.pos)
         self.layout_principal.bind(size=self._update_rect, pos=self._update_rect)
 
@@ -101,12 +101,12 @@ class PontoApp(App):
             hora_gravada = self.historico_botoes.get(p_id)
             if hora_gravada:
                 self.botoes_ui[p_id].disabled = True
-                self.botoes_ui[p_id].background_color = (0.95, 0.54, 0.65, 1)
+                self.botoes_ui[p_id].background_color = (0.95, 0.54, 0.65, 1) # Vermelho Pastel
                 self.labels_ui[p_id].text = f"Registado às: {hora_gravada}"
                 self.labels_ui[p_id].color = (0.95, 0.54, 0.65, 1)
             else:
                 self.botoes_ui[p_id].disabled = True
-                self.botoes_ui[p_id].background_color = (0.27, 0.28, 0.35, 1)
+                self.botoes_ui[p_id].background_color = (0.27, 0.28, 0.35, 1) # Cinza Bloqueado
                 self.labels_ui[p_id].text = "Bloqueado"
                 self.labels_ui[p_id].color = (0.42, 0.44, 0.55, 1)
 
@@ -124,7 +124,7 @@ class PontoApp(App):
 
     def activar_ui_botao(self, p_id, texto_status):
         self.botoes_ui[p_id].disabled = False
-        self.botoes_ui[p_id].background_color = (0.65, 0.89, 0.63, 1)
+        self.botoes_ui[p_id].background_color = (0.65, 0.89, 0.63, 1) # Verde Pastel
         self.labels_ui[p_id].text = texto_status
         self.labels_ui[p_id].color = (0.65, 0.89, 0.63, 1)
 
