@@ -1,11 +1,11 @@
 [app]
 title = Sistema de Ponto Pro
-package.name = pontosistemanovo
-package.domain = org.empresanova.sistema
+package.name = pontosistemaunificado
+package.domain = org.empresanova.unificado
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
-version = 2.0
+version = 3.0
 
 requirements = python3,kivy,requests,urllib3,certifi,charset-normalizer,idna
 
@@ -14,7 +14,7 @@ fullscreen = 1
 
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# CONFIGURAÇÃO DE SEGURANÇA MÁXIMA COMPATÍVEL
+# CONFIGURAÇÃO ESTÁVEL DE COMPILAÇÃO CYTHON
 android.api = 34
 android.minapi = 26
 android.ndk_api = 26
