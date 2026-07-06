@@ -14,11 +14,11 @@ fullscreen = 1
 
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# CONFIGURAÇÃO DE ESTABILIDADE GERAL PARA DISPOSITIVOS ATÉ ANDROID 15
+# CONFIGURAÇÃO DE SEGURANÇA E EMPACOTAMENTO DA GOOGLE
 android.api = 34
 android.minapi = 26
 android.ndk_api = 26
-android.ndk = 26b
+android.ndk = 27c
 android.private_storage = True
 android.archs = arm64-v8a
 
