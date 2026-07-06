@@ -19,12 +19,7 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Configurar Python 3.11 de Sistema
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-
-    - name: Instalar Ferramentas de Compilacao Nativas
+    - name: Instalar Ferramentas de Compilacao
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential ccache git libffi-dev libssl-dev libtool \
@@ -33,21 +28,12 @@ jobs:
         pip install --upgrade pip
         pip install "buildozer==1.5.0" "cython<3.0.0" virtualenv
 
-    - name: Compilar APK com Python Isolado
+    - name: Compilar APK com Buildozer
       run: |
-        # SEGREDO DO SUCESSO: Cria um ambiente virtual Python 3.11 puro para isolar o Buildozer do host
-        python3 -m venv venv
-        source venv/bin/activate
-        pip install --upgrade pip
-        pip install "buildozer==1.5.0" "cython<3.0.0"
-        
-        # Remove variáveis do GitHub que quebram o Android NDK
         export PATH=$PATH:~/.local/bin
         unset ANDROID_NDK_HOME
         unset ANDROID_NDK_ROOT
-        
         yes | buildozer android debug
-        deactivate
 
     - name: Enviar Ficheiro APK Final
       uses: actions/upload-artifact@v4
