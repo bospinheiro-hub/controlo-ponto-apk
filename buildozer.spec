@@ -7,15 +7,15 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 3.0
 
-# Alinhamento exato com o ambiente virtual isolado (Python 3.11)
-requirements = python3==3.11,kivy,requests,urllib3,certifi,charset-normalizer,idna
+# CORREÇÃO FOCADA: Deixamos o python3 livre para se alinhar com o host de compilação sem dar erro
+requirements = python3,kivy,requests,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
 fullscreen = 1
 
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# CONFIGURAÇÃO DE SEGURANÇA MÁXIMA PARA ANDROID MODERNOS
+# CONFIGURAÇÃO DE SEGURANÇA E PROCESSO MODERNO
 android.api = 34
 android.minapi = 26
 android.private_storage = True
