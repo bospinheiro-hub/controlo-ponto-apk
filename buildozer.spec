@@ -7,19 +7,17 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 3.0
 
-# CORREÇÃO FOCADA: Alinhado diretamente com o hostpython do GitHub Actions (3.14)
-requirements = python3==3.14,kivy,requests,urllib3,certifi,charset-normalizer,idna
+# O Kivy irá gerir automaticamente a receita interna dentro do container Docker
+requirements = python3,kivy,requests,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
 fullscreen = 1
 
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# CONFIGURAÇÃO DE SEGURANÇA E PROCESSO MODERNO
+# CONFIGURAÇÃO DE SEGURANÇA MÁXIMA PARA ANDROID MODERNOS
 android.api = 34
 android.minapi = 26
-android.ndk_api = 26
-android.ndk = 26b
 android.private_storage = True
 android.archs = arm64-v8a
 android.allow_backup = True
