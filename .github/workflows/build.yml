@@ -7,7 +7,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    # Atualizado para o ambiente moderno de compilação da Google
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout Codigo
@@ -24,14 +25,15 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Instalar Ferramentas de Compilacao
+    - name: Instalar Ferramentas de Compilacao Modernas
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential ccache git libffi-dev libssl-dev libtool \
           pkg-config autoconf automake libpython3-dev libsqlite3-dev \
-          lld unzip zip aidl libstdc++6
+          lld unzip zip aidl libstdc++6 openjdk-17-jdk
         pip install --upgrade pip
-        pip install "buildozer==1.5.0" "cython<3.0.0" virtualenv
+        # Usar a versão estável mais recente para evitar falhas de compilação C++
+        pip install "buildozer>=1.6.0" "cython<3.0.0" virtualenv
 
     - name: Destruir Ficheiros Temporarios Antigos
       run: |
@@ -39,7 +41,7 @@ jobs:
         rm -rf build
         rm -rf bin
 
-    - name: Compilar APK Limpo com Buildozer
+    - name: Compilar APK com Buildozer Moderno
       run: |
         mkdir -p ~/.buildozer/android/platform/
         yes | buildozer android debug
