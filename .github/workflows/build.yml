@@ -27,7 +27,6 @@ jobs:
     - name: Instalar Ferramentas de Compilacao Nativas
       run: |
         sudo apt-get update
-        # Atualizado: Substituídas as bibliotecas obsoletas v5 pelas v6 nativas do Ubuntu 24.04
         sudo apt-get install -y build-essential ccache git libffi-dev libssl-dev libtool \
           pkg-config autoconf automake libsqlite3-dev lld unzip zip aidl libstdc++6 \
           libtinfo6 libncurses6 libncursesw6
