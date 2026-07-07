@@ -19,20 +19,37 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Instalar Ferramentas de Compilacao Nativas
+    - name: Instalar Python 3.11 Nativo no Sistema
       run: |
         sudo apt-get update
+        sudo apt-get install -y python3.11 python3.11-dev python3.11-venv
+        
+        # FORÇA DO SISTEMA: Substitui o comando python3 global a nível de sistema operativo
+        sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 100
+        sudo update-alternatives --set python3 /usr/bin/python3.11
+        
+        # Garante que o atalho 'python' também aponta para o 3.11
+        sudo ln -sf /usr/bin/python3.11 /usr/bin/python
+        
+        # Validação visual obrigatória no log
+        python3 --version
+
+    - name: Instalar Ferramentas de Compilacao Nativas
+      run: |
         sudo apt-get install -y build-essential ccache git libffi-dev libssl-dev libtool \
           pkg-config autoconf automake libsqlite3-dev lld unzip zip aidl libstdc++6 \
           libtinfo5 libncurses5 libncursesw5
-        pip install --upgrade pip virtualenv
-        pip install --user "buildozer>=1.6.0" "cython<3.0.0"
+        
+        # Reinstala o pip do zero diretamente no núcleo do Python 3.11
+        curl -sS https://pypa.io | python3
+        python3 -m pip install --upgrade pip virtualenv
+        python3 -m pip install "buildozer==1.5.0" "cython<3.0.0"
 
-    - name: Purga e Compilacao Limpa do APK
+    - name: Purga e Compilacao do APK
       run: |
         export PATH=$PATH:~/.local/bin
         
-        # Purga total de caches antigas da corrida 119
+        # Limpeza física total de resquícios de compilações antigas
         rm -rf .buildozer
         rm -rf bin
         rm -rf build
@@ -40,4 +57,5 @@ jobs:
         unset ANDROID_NDK_HOME
         unset ANDROID_NDK_ROOT
         
+        # Executa o buildozer amarrado ao ambiente forçado do sistema
         buildozer android debug
