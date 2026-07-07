@@ -7,7 +7,7 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 3.0
 
-# Alinhamento automático estável sem amarras de versão que baralham os scripts C++
+# O motor oficial Kivy ira gerir nativamente os requisitos de forma alinhada
 requirements = python3,kivy,requests,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
@@ -15,7 +15,7 @@ fullscreen = 1
 
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# CONFIGURAÇÃO ULTRA ESTÁVEL DE PROCESSO DA GOOGLE
+# CONFIGURAÇÃO DE PADRÃO ESTÁVEL DA GOOGLE
 android.api = 34
 android.minapi = 26
 android.private_storage = True
