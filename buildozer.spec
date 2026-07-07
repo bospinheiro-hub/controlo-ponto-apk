@@ -7,15 +7,15 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 3.0
 
-# Sintonizado exactamente com a receita do Python 3.10 que forçámos na raiz do Linux
-requirements = python3==3.10,kivy,requests,urllib3,certifi,charset-normalizer,idna
+# REQUISITOS LIMPOS: Apenas o python3 e o kivy nativos. A rede é gerida pelo UrlRequest embutido.
+requirements = python3,kivy
 
 orientation = portrait
 fullscreen = 1
 
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# CONFIGURAÇÃO DE SEGURANÇA E PROCESSO MODERNO
+# CALIBRAGEM ESTÁVEL PARA ANDROID 14 E 15
 android.api = 34
 android.minapi = 26
 android.private_storage = True
