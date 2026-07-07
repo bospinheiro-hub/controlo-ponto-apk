@@ -7,7 +7,6 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 3.0
 
-# Requisitos limpos e nativos que evitam downloads externos corrompidos
 requirements = python3,kivy,requests,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
@@ -15,11 +14,14 @@ fullscreen = 1
 
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# CONFIGURAÇÃO DE SEGURANÇA E PROCESSO MODERNO (API 34 + NDK 26b)
+# ALINHAMENTO EXATO COM O SISTEMA DO GITHUB ACTIONS
 android.api = 34
 android.minapi = 26
 android.private_storage = True
+android.ndk = 27c
+android.ndk_api = 26
 android.archs = arm64-v8a
+
 android.allow_backup = True
 android.accept_sdk_license = True
 p4a.branch = master
