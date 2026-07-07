@@ -19,11 +19,6 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Configurar Python 3.11 Estavel
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-
     - name: Instalar Ferramentas de Compilacao Nativas
       run: |
         sudo apt-get update
@@ -37,22 +32,12 @@ jobs:
       run: |
         export PATH=$PATH:~/.local/bin
         
-        # DESTRUIÇÃO DE CACHE: Garante um ambiente do zero absoluto
+        # Purga total de caches antigas da corrida 119
         rm -rf .buildozer
         rm -rf bin
         rm -rf build
         
-        # ALINHAMENTO FORÇADO DE HOSTPYTHON: Reescreve os links globais do Linux do GitHub Actions
-        sudo ln -sf /opt/hostedtoolcache/Python/3.11.*/x64/bin/python3 /usr/bin/python3
-        sudo ln -sf /opt/hostedtoolcache/Python/3.11.*/x64/bin/python3 /usr/local/bin/python3
-        sudo ln -sf /opt/hostedtoolcache/Python/3.11.*/x64/bin/python /usr/bin/python
-        
-        # Validação visual no log (Vai mostrar Python 3.11.x)
-        python3 --version
-        
-        # Limpa as variáveis do runner que colidiam com o compilador do NDK
         unset ANDROID_NDK_HOME
         unset ANDROID_NDK_ROOT
-        export P4A_hostpython=/usr/bin/python3
         
         buildozer android debug
