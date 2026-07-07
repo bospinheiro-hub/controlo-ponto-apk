@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout Codigo
@@ -19,30 +19,31 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Configurar Python 3.11
+    - name: Configurar Python 3.10 Estavel
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.10'
 
     - name: Instalar Ferramentas de Compilacao Nativas
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential ccache git libffi-dev libssl-dev libtool \
           pkg-config autoconf automake libsqlite3-dev lld unzip zip aidl libstdc++6 \
-          libtinfo6 libncurses6 libncursesw6
-        python3 -m pip install --upgrade pip
-        python3 -m pip install "buildozer>=1.6.0" "cython<3.0.0" virtualenv
+          libtinfo5 libncurses5 libncursesw5
+        
+        # Amarração de Ambiente: Substitui o binário para o buildozer ler apenas o Python 3.10
+        sudo rm -f /usr/bin/python3
+        sudo ln -s /opt/hostedtoolcache/Python/3.10.*/x64/bin/python3 /usr/bin/python3
+        python3 --version
+        
+        pip install --upgrade pip
+        pip install "buildozer==1.5.0" "cython<3.0.0" virtualenv
 
-    - name: Compilar APK com Buildozer Moderno
+    - name: Compilar APK com Buildozer
       run: |
         export PATH=$PATH:~/.local/bin
         unset ANDROID_NDK_HOME
         unset ANDROID_NDK_ROOT
-        yes | buildozer android debug
-
-    - name: Enviar Ficheiro APK Final
-      uses: actions/upload-artifact@v4
-      with:
-        name: Ponto-APK
-        path: bin/*.apk
-        if-no-files-found: error
+        
+        # Removido o 'yes |' para impedir o erro de Broken Pipe e forçar o log a expor tudo em texto limpo
+        buildozer android debug
