@@ -7,8 +7,8 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 3.0
 
-# CORREÇÃO DEFINITIVA: Removemos as amarras de versão do python3 para o host e o compilador estarem sincronizados
-requirements = python3,kivy,requests,urllib3,certifi,charset-normalizer,idna
+# Sintonizado com o Python 3.10 que trancámos no sistema global do runner
+requirements = python3==3.10,kivy,requests,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
 fullscreen = 1
