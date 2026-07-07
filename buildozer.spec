@@ -7,15 +7,15 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 3.0
 
-# Alinhamento mecânico: Força o uso da receita estável que não quebra o config.pxi
-requirements = python3==3.11,kivy,requests,urllib3,certifi,charset-normalizer,idna
+# Alinhamento automático limpo que evita o crash de hostpython
+requirements = python3,kivy,requests,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
 fullscreen = 1
 
 android.permissions = INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE
 
-# CONFIGURAÇÃO DE SEGURANÇA E PROCESSO MODERNO
+# CONFIGURAÇÃO DE SEGURANÇA E PROCESSO MODERNO (API 34 + NDK 26b)
 android.api = 34
 android.minapi = 26
 android.private_storage = True
