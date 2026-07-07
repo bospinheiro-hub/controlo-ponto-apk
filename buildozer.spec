@@ -7,8 +7,8 @@ source.include_exts = py,png,jpg,kv,atlas
 source.exclude_patterns = tests/*, venv/*, *.pyc, build/*, .pytest_cache/*
 version = 4.0
 
-# Alinhamento fluido que resolve o erro do hostpython de uma vez por todas
-requirements = python3,kivy,requests,urllib3,certifi,charset-normalizer,idna
+# Sintonizado exatamente com a versão global que forçámos na raiz do Linux
+requirements = python3==3.11,kivy,requests,urllib3,certifi,charset-normalizer,idna
 
 orientation = portrait
 fullscreen = 1
